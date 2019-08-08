@@ -144,7 +144,7 @@ def create_conjur_iam_api_key():
 
 
 def get_conjur_iam_session_token(appliance_url, account, service_id, host_id, cert_file):
-    url = "{}/authn-iam/{}/{}/{}/authenticate".format(appliance_url, account, service_id, urllib.parse.quote(host_id, safe=''))
+    url = "{}/authn-iam/{}/{}/{}/authenticate".format(appliance_url, service_id, account, urllib.parse.quote(host_id, safe=''))
     iam_api_key = create_conjur_iam_api_key()
     r = requests.post(url=url,data=iam_api_key,verify=cert_file)
     return r.text
