@@ -29,8 +29,8 @@ def get_signature_key(key, dateStamp, regionName, serviceName):
 
 
 def get_aws_region():
-    return requests.get(AWS_AVAILABILITY_ZONE).text[:-1]
-
+    # return requests.get(AWS_AVAILABILITY_ZONE).text[:-1]
+    return "us-east-1"
 
 def get_iam_role_name():
     r = requests.get(AWS_METADATA_URL)
