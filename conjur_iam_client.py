@@ -86,9 +86,13 @@ def create_canonical_request(amzdate, token, signed_headers, payload_hash):
     return canonical_request
 
 
-def create_conjur_iam_api_key():
-    iam_role_name = get_iam_role_name()
-    access_key, secret_key, token = get_iam_role_metadata(iam_role_name)
+def create_conjur_iam_api_key(iam_role_name=None, access_key=None, secret_key=None, token=None):
+    if iam_role_name is None:
+        iam_role_name = get_iam_role_name()
+    
+    if access_key is None and secret_key is None and token is None:
+        access_key, secret_key, token = get_iam_role_metadata(iam_role_name)
+
     region = get_aws_region()
 
     if access_key is None or secret_key is None:
@@ -143,9 +147,9 @@ def create_conjur_iam_api_key():
     return '{}'.format(headers).replace("'", '"')
 
 
-def get_conjur_iam_session_token(appliance_url, account, service_id, host_id, cert_file):
+def get_conjur_iam_session_token(appliance_url, account, service_id, host_id, cert_file, iam_role_name=None, access_key=None, secret_key=None, token=None):
     url = "{}/authn-iam/{}/{}/{}/authenticate".format(appliance_url, service_id, account, urllib.parse.quote(host_id, safe=''))
-    iam_api_key = create_conjur_iam_api_key()
+    iam_api_key = create_conjur_iam_api_key(iam_role_name, access_key, secret_key, token)
     r = requests.post(url=url,data=iam_api_key,verify=cert_file)
     return r.text
 
@@ -155,27 +159,27 @@ If using IAM roles with conjur via the python3 api client use this function.
 The client will not support auto-refreshing of token when using iam authentication so it is recommended to call this method everytime you make a client request.
 An issue/enhancement has ben created on the conjur-python3-api github to address this issue however this is a work around for the time being.
 """
-def create_conjur_iam_client(appliance_url, account, service_id, host_id, cert_file):
+def create_conjur_iam_client(appliance_url, account, service_id, host_id, cert_file, iam_role_name=None, access_key=None, secret_key=None, token=None):
     # create our client with a placeholder api key
     client = Client(url=appliance_url, account=account, login_id=host_id, api_key="placeholder", ca_bundle=cert_file)
 
     # now obtain the iam session_token
-    session_token = get_conjur_iam_session_token(appliance_url, account, service_id, host_id, cert_file)
-
+    session_token = get_conjur_iam_session_token(appliance_url, account, service_id, host_id, cert_file, iam_role_name, access_key, secret_key, token)
+ 
     # override the _api_token with the token created in get_conjur_iam_session_token
     client._api._api_token = session_token
     client._api.api_token_expiration = datetime.datetime.now() + timedelta(minutes=client._api.API_TOKEN_DURATION)
 
     return client
 
-def create_conjur_iam_client_from_env():
+def create_conjur_iam_client_from_env(iam_role_name=None, access_key=None, secret_key=None, token=None):
     try:
         appliance_url = os.environ['CONJUR_APPLIANCE_URL']
         account = os.environ['CONJUR_ACCOUNT']
         service_id = os.environ['AUTHN_IAM_SERVICE_ID']
         host_id = os.environ['CONJUR_AUTHN_LOGIN']
         cert_file = os.environ['CONJUR_CERT_FILE']
-        return create_conjur_iam_client(appliance_url, account, service_id, host_id, cert_file)
+        return create_conjur_iam_client(appliance_url, account, service_id, host_id, cert_file, iam_role_name, access_key, secret_key, token)
     except KeyError as e:
         raise KeyError("Failed to retrieve environment variable: {}".format(e))
 
