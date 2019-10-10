@@ -104,7 +104,7 @@ IAM_ROLE_NAME=<iam-role-name>
 ```
 
 #### Executing python script
-The difference here is instead of having the client reach out to the metadata url and automatically obtain the keys and tokens required to authenticate. We are fetching these are pushing them into the `create_conjur_iam_client_from_env()` function.
+The difference here is instead of having the client reach out to the metadata url and automatically obtain the keys and tokens required to authenticate. We are fetching these and pushing them into the `create_conjur_iam_client_from_env()` function.
 ```python3
 from conjur import Client
 from conjur_iam_client import create_conjur_iam_client_from_env
