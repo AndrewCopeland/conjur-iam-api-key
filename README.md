@@ -121,3 +121,7 @@ def lambda_handler(event, context):
         "list": conjur_list
     }
 ```
+
+#### Example lambda function package
+An example of a bundled lambda function can be found [here](https://github.com/AndrewCopeland/conjur-iam-api-key/releases/download/v0.0.1/function.zip). **If you are using a self signed certificate make sure to replace conjur-conjur.pem with your self signed cert!**
+.
