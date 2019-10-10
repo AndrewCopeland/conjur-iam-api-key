@@ -68,3 +68,56 @@ This function returns a client exactly like the function above. However instead 
 >>> conjur_client = create_conjur_iam_client_from_env()
 >>> conjur_client.list() # This will return a list of all the resource you have access to. See https://github.com/cyberark/conjur-api-python3 for all of the methods this client supports.
 ```
+
+## EC2 Usage
+In this example we will be using the `create_conjur_iam_client_from_env()` function. It is assumed an IAM role is already associated with the ec2 instance.
+
+#### Setting the environment variables
+```bash
+$ export CONJUR_APPLIANCE_URL=https://conjur.yourorg.com
+$ export AUTHN_IAM_SERVICE_ID=dev
+$ export CONJUR_AUTHN_LOGIN=host/cust-portal/<aws-account-id>/<iam-role-name>
+$ export CONJUR_CERT_FILE=./conjur-dev.pem
+$ export CONJUR_ACCOUNT=dev
+```
+
+#### Executing python script from the ec2 instance
+```python3
+from conjur import Client
+from conjur_iam_client import create_conjur_iam_client_from_env
+
+conjur_client = create_conjur_iam_client_from_env()
+conjur_list = conjur_client.list()
+```
+
+## Lambda Usage
+Since lambda cannot reach out to the AWS metadata url we have to slightly modify how we execute `create_conjur_iam_client_from_env()`. It is assumed an IAM role is already associated with the lambda function.
+
+#### Lambda environment variables
+```
+CONJUR_APPLIANCE_URL=https://conjur.yourorg.com
+AUTHN_IAM_SERVICE_ID=dev
+CONJUR_AUTHN_LOGIN=host/cust-portal/<aws-account-id>/<iam-role-name>
+CONJUR_CERT_FILE=./conjur-dev.pem
+CONJUR_ACCOUNT=dev
+IAM_ROLE_NAME=<iam-role-name>
+```
+
+#### Executing python script
+The difference here is instead of having the client reach out to the metadata url and automatically obtain the keys and tokens required to authenticate. We are fetching these are pushing them into the `create_conjur_iam_client_from_env()` function.
+```python3
+from conjur import Client
+from conjur_iam_client import create_conjur_iam_client_from_env
+import os
+
+def lambda_handler(event, context):
+    iam_role_name=os.environ['IAM_ROLE_NAME']
+    access_key=os.environ['AWS_ACCESS_KEY_ID']
+    secret_key=os.environ['AWS_SECRET_ACCESS_KEY']
+    token=os.environ['AWS_SESSION_TOKEN']
+    conjur_client = create_conjur_iam_client_from_env(iam_role_name, access_key, secret_key, token)
+    conjur_list = conjur_client.list()
+    return {
+        "list": conjur_list
+    }
+```
