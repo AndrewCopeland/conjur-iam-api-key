@@ -14,6 +14,10 @@ ENDPOINT = 'https://sts.amazonaws.com'
 REQUEST_PARAMETERS = 'Action=GetCallerIdentity&Version=2011-06-15'
 
 
+class ConjurIAMAuthnException(Exception):
+    def __init__(self):
+        Exception.__init__(self,"Conjur IAM auithentication failed with 401 - Unauthorized. Check conjur logs for more information") 
+
 # Key derivation functions. See:
 # http://docs.aws.amazon.com/general/latest/gr/signature-v4-examples.html#signature-v4-examples-python
 def sign(key, msg):
@@ -147,10 +151,18 @@ def create_conjur_iam_api_key(iam_role_name=None, access_key=None, secret_key=No
     return '{}'.format(headers).replace("'", '"')
 
 
-def get_conjur_iam_session_token(appliance_url, account, service_id, host_id, cert_file, iam_role_name=None, access_key=None, secret_key=None, token=None):
+def get_conjur_iam_session_token(appliance_url, account, service_id, host_id, cert_file, iam_role_name=None, access_key=None, secret_key=None, token=None, ssl_verify=True):
     url = "{}/authn-iam/{}/{}/{}/authenticate".format(appliance_url, service_id, account, urllib.parse.quote(host_id, safe=''))
     iam_api_key = create_conjur_iam_api_key(iam_role_name, access_key, secret_key, token)
+    
+    # If ssl_verify is explicitly false then ignore ssl certificate
+    if not ssl_verify:
+        cert_file = False
+    
     r = requests.post(url=url,data=iam_api_key,verify=cert_file)
+
+    if r.status_code == 401:
+        raise ConjurIAMAuthnException()
     return r.text
 
 
@@ -159,7 +171,7 @@ If using IAM roles with conjur via the python3 api client use this function.
 The client will not support auto-refreshing of token when using iam authentication so it is recommended to call this method everytime you make a client request.
 An issue/enhancement has ben created on the conjur-python3-api github to address this issue however this is a work around for the time being.
 """
-def create_conjur_iam_client(appliance_url, account, service_id, host_id, cert_file, iam_role_name=None, access_key=None, secret_key=None, token=None):
+def create_conjur_iam_client(appliance_url, account, service_id, host_id, cert_file, iam_role_name=None, access_key=None, secret_key=None, token=None, ssl_verify=True):
     # create our client with a placeholder api key
     client = Client(url=appliance_url, account=account, login_id=host_id, api_key="placeholder", ca_bundle=cert_file)
 
@@ -172,7 +184,7 @@ def create_conjur_iam_client(appliance_url, account, service_id, host_id, cert_f
 
     return client
 
-def create_conjur_iam_client_from_env(iam_role_name=None, access_key=None, secret_key=None, token=None):
+def create_conjur_iam_client_from_env(iam_role_name=None, access_key=None, secret_key=None, token=None, ssl_verify=True):
     try:
         appliance_url = os.environ['CONJUR_APPLIANCE_URL']
         account = os.environ['CONJUR_ACCOUNT']
