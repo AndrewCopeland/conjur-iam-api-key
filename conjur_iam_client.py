@@ -191,7 +191,7 @@ def create_conjur_iam_client_from_env(iam_role_name=None, access_key=None, secre
         service_id = os.environ['AUTHN_IAM_SERVICE_ID']
         host_id = os.environ['CONJUR_AUTHN_LOGIN']
         cert_file = os.environ['CONJUR_CERT_FILE']
-        return create_conjur_iam_client(appliance_url, account, service_id, host_id, cert_file, iam_role_name, access_key, secret_key, token)
+        return create_conjur_iam_client(appliance_url, account, service_id, host_id, cert_file, iam_role_name, access_key, secret_key, token, ssl_verify)
     except KeyError as e:
         raise KeyError("Failed to retrieve environment variable: {}".format(e))
 
