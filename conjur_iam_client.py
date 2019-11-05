@@ -176,7 +176,7 @@ def create_conjur_iam_client(appliance_url, account, service_id, host_id, cert_f
     client = Client(url=appliance_url, account=account, login_id=host_id, api_key="placeholder", ca_bundle=cert_file)
 
     # now obtain the iam session_token
-    session_token = get_conjur_iam_session_token(appliance_url, account, service_id, host_id, cert_file, iam_role_name, access_key, secret_key, token)
+    session_token = get_conjur_iam_session_token(appliance_url, account, service_id, host_id, cert_file, iam_role_name, access_key, secret_key, token, ssl_verify)
  
     # override the _api_token with the token created in get_conjur_iam_session_token
     client._api._api_token = session_token
