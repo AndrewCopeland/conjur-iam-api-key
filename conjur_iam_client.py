@@ -31,7 +31,6 @@ def get_signature_key(key, dateStamp, regionName, serviceName):
     kSigning = sign(kService, 'aws4_request')
     return kSigning
 
-
 def get_aws_region():
     # return requests.get(AWS_AVAILABILITY_ZONE).text[:-1]
     return "us-east-1"
@@ -39,7 +38,6 @@ def get_aws_region():
 def get_iam_role_name():
     r = requests.get(AWS_METADATA_URL)
     return r.text
-
 
 def get_iam_role_metadata(role_name):
     r = requests.get(AWS_METADATA_URL + role_name)
@@ -50,7 +48,6 @@ def get_iam_role_metadata(role_name):
     token = json_dict["Token"]
 
     return access_key_id, secret_access_key, token
-
 
 def create_canonical_request(amzdate, token, signed_headers, payload_hash):
     # ************* TASK 1: CREATE A CANONICAL REQUEST *************
@@ -88,7 +85,6 @@ def create_canonical_request(amzdate, token, signed_headers, payload_hash):
     canonical_request = METHOD + '\n' + canonical_uri + '\n' + canonical_querystring + '\n' + canonical_headers + '\n' + signed_headers + '\n' + payload_hash
 
     return canonical_request
-
 
 def create_conjur_iam_api_key(iam_role_name=None, access_key=None, secret_key=None, token=None):
     if iam_role_name is None:
@@ -150,12 +146,15 @@ def create_conjur_iam_api_key(iam_role_name=None, access_key=None, secret_key=No
     # ************* SEND THE REQUEST *************
     return '{}'.format(headers).replace("'", '"')
 
-
 def get_conjur_iam_session_token(appliance_url, account, service_id, host_id, cert_file, iam_role_name=None, access_key=None, secret_key=None, token=None, ssl_verify=True):
     url = "{}/authn-iam/{}/{}/{}/authenticate".format(appliance_url, service_id, account, urllib.parse.quote(host_id, safe=''))
     iam_api_key = create_conjur_iam_api_key(iam_role_name, access_key, secret_key, token)
     
-    # If ssl_verify is explicitly false then ignore ssl certificate
+    # If cert file is not provided then assume conjur is using valid certificate
+    if cert_file == None:
+        cert_file = True
+
+    # If ssl_verify is explicitly false then ignore ssl certificate even if cert_file is set
     if not ssl_verify:
         cert_file = False
     
@@ -164,7 +163,6 @@ def get_conjur_iam_session_token(appliance_url, account, service_id, host_id, ce
     if r.status_code == 401:
         raise ConjurIAMAuthnException()
     return r.text
-
 
 """
 If using IAM roles with conjur via the python3 api client use this function.
@@ -190,7 +188,9 @@ def create_conjur_iam_client_from_env(iam_role_name=None, access_key=None, secre
         account = os.environ['CONJUR_ACCOUNT']
         service_id = os.environ['AUTHN_IAM_SERVICE_ID']
         host_id = os.environ['CONJUR_AUTHN_LOGIN']
-        cert_file = os.environ['CONJUR_CERT_FILE']
+        cert_file = None
+        if 'CONJUR_CERT_FILE' in os.environ:
+            cert_file = os.environ['CONJUR_CERT_FILE']
         return create_conjur_iam_client(appliance_url, account, service_id, host_id, cert_file, iam_role_name, access_key, secret_key, token, ssl_verify)
     except KeyError as e:
         raise KeyError("Failed to retrieve environment variable: {}".format(e))
