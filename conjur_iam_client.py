@@ -147,6 +147,7 @@ def create_conjur_iam_api_key(iam_role_name=None, access_key=None, secret_key=No
     return '{}'.format(headers).replace("'", '"')
 
 def get_conjur_iam_session_token(appliance_url, account, service_id, host_id, cert_file, iam_role_name=None, access_key=None, secret_key=None, token=None, ssl_verify=True):
+    appliance_url = appliance_url.rstrip("/")
     url = "{}/authn-iam/{}/{}/{}/authenticate".format(appliance_url, service_id, account, urllib.parse.quote(host_id, safe=''))
     iam_api_key = create_conjur_iam_api_key(iam_role_name, access_key, secret_key, token)
     
@@ -170,6 +171,7 @@ The client will not support auto-refreshing of token when using iam authenticati
 An issue/enhancement has ben created on the conjur-python3-api github to address this issue however this is a work around for the time being.
 """
 def create_conjur_iam_client(appliance_url, account, service_id, host_id, cert_file, iam_role_name=None, access_key=None, secret_key=None, token=None, ssl_verify=True):
+    appliance_url = appliance_url.rstrip("/")
     # create our client with a placeholder api key
     client = Client(url=appliance_url, account=account, login_id=host_id, api_key="placeholder", ca_bundle=cert_file, ssl_verify=ssl_verify)
 
