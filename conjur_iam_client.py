@@ -171,7 +171,7 @@ An issue/enhancement has ben created on the conjur-python3-api github to address
 """
 def create_conjur_iam_client(appliance_url, account, service_id, host_id, cert_file, iam_role_name=None, access_key=None, secret_key=None, token=None, ssl_verify=True):
     # create our client with a placeholder api key
-    client = Client(url=appliance_url, account=account, login_id=host_id, api_key="placeholder", ca_bundle=cert_file)
+    client = Client(url=appliance_url, account=account, login_id=host_id, api_key="placeholder", ca_bundle=cert_file, ssl_verify=ssl_verify)
 
     # now obtain the iam session_token
     session_token = get_conjur_iam_session_token(appliance_url, account, service_id, host_id, cert_file, iam_role_name, access_key, secret_key, token, ssl_verify)
