@@ -101,6 +101,8 @@ CONJUR_AUTHN_LOGIN=host/cust-portal/<aws-account-id>/<iam-role-name>
 CONJUR_CERT_FILE=./conjur-dev.pem
 CONJUR_ACCOUNT=dev
 IAM_ROLE_NAME=<iam-role-name>
+# Depending if you want to ignore untrusted ssl certificate
+IGNORE_SSL=<true or false>
 ```
 
 #### Executing python script
