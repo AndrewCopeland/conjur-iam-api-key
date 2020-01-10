@@ -46,8 +46,7 @@ def get_iam_role_name():
 def get_iam_role_metadata(role_name):
     r = requests.get(AWS_METADATA_URL + role_name)
     if r.status_code == 404:
-
-
+        raise IAMRoleNotAvailableException()
 
     json_dict = json.loads(r.text)
 
