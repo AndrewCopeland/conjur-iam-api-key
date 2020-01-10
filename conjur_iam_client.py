@@ -18,6 +18,10 @@ class ConjurIAMAuthnException(Exception):
     def __init__(self):
         Exception.__init__(self,"Conjur IAM auithentication failed with 401 - Unauthorized. Check conjur logs for more information") 
 
+class IAMRoleNotAvailableException(Exception):
+    def __init__(self):
+        Exception.__init__(self,"Most likely the ec2 instance is configured with no or an incorrect iam role") 
+
 # Key derivation functions. See:
 # http://docs.aws.amazon.com/general/latest/gr/signature-v4-examples.html#signature-v4-examples-python
 def sign(key, msg):
@@ -41,6 +45,10 @@ def get_iam_role_name():
 
 def get_iam_role_metadata(role_name):
     r = requests.get(AWS_METADATA_URL + role_name)
+    if r.status_code == 404:
+
+
+
     json_dict = json.loads(r.text)
 
     access_key_id = json_dict["AccessKeyId"]
