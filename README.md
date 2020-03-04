@@ -121,7 +121,7 @@ def lambda_handler(event, context):
 ```
 
 ## Summon Usage
-Summon usage has only been manually tested on an EC2 instance. With that being said make sure to set the [environment variables mentioned here](#ec2-usage). `iam_provider.py` is the summon_provider. The `iam_provider.py` assumes python3 is installed on the EC2 instance. Example below:
+Summon usage has only been manually tested on an EC2 instance. With that being said make sure to set the [environment variables mentioned here](#ec2-usage). `iam_provider.py` is the summon provider. The `iam_provider.py` assumes python3 is installed on the EC2 instance. Example below:
 ```bash
 # this should print out the environment variables 
 # which should contain the password retrieved
