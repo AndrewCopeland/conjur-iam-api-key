@@ -6,6 +6,7 @@ Get an iam api key used by conjur, get a sdk client using iam authentication.
 
 ### From source
 ```bash
+$ pip3 install conjur-client
 $ git clone https://github.com/AndrewCopeland/conjur-iam-api-key.git
 $ cd conjur-iam-api-key; pip3 install .
 ```
