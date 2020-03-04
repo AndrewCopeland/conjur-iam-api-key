@@ -19,6 +19,5 @@ if __name__ == '__main__':
     if value == None or value == "":
         write_and_flush(sys.stderr, '{} could not be retrieved'.format(variable_id))
         sys.exit(1)
-
-    write_and_flush(sys.stdout, value)
+    write_and_flush(sys.stdout, value.decode('utf-8'))
 
