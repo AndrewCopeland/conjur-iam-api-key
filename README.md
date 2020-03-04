@@ -125,6 +125,16 @@ def lambda_handler(event, context):
     }
 ```
 
+## Summon Usage
+Summon has only been manually tested on an EC2 instance. Make sure to set the same [environment variables mentioned here](#ec2-usage). After setting the environment variables you should be able to use `iam_provider.py` as you summon provider. Example below
+
+```bash
+# this should print out the environment variables which should
+# contain the password retrieved
+summon -p ./iam_provider.py env
+```
+
+#### 
 #### Example lambda function package
 An example of a bundled lambda function can be found [here](https://github.com/AndrewCopeland/conjur-iam-api-key/blob/master/lambda_function_package.zip). **If you are using a self signed certificate make sure to replace conjur-conjur.pem with your self signed cert!**
 .
