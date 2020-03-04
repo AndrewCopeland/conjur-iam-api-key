@@ -1,6 +1,11 @@
 # conjur-iam-api-key
 Get an iam api key used by conjur, get a sdk client using iam authentication.
-
+- [How to Install](#from-source)
+- [Available python3 functions](#usage)
+- [EC2 usage](#ec2-usage)
+- [Lambda Usage](#lambda-usage)
+- [Example Lambda Function Bundle](#example-lambda-function-package)
+- [Summon Usage](#summon-usage)
 
 ## Installing the code
 
@@ -12,16 +17,6 @@ $ cd conjur-iam-api-key; pip3 install .
 ```
 
 ## Usage
-
-#### Setting environment variables
-```bash
-$ export CONJUR_APPLIANCE_URL=https://conjur.yourorg.com
-$ export AUTHN_IAM_SERVICE_ID=dev
-$ export CONJUR_AUTHN_LOGIN=host/cust-portal/<aws-account-id>/<iam-role-name>
-$ export CONJUR_CERT_FILE=./conjur-dev.pem
-$ export CONJUR_ACCOUNT=dev
-```
-
 #### create_conjur_iam_api_key
 
 This function will return a json formatted header used as an api key to authenticate to conjur when using authn-iam.
