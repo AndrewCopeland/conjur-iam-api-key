@@ -7,6 +7,9 @@ Get an iam api key used by conjur, get a sdk client using iam authentication.
 - [Example Lambda Function Bundle](#example-lambda-function-package)
 - [Summon Usage](#summon-usage)
 
+## Supported python versions
+python >= 3.6
+
 ## Installing the code
 
 ### From source
