@@ -7,11 +7,14 @@ Get an iam api key used by conjur or get a sdk client using iam authentication.
 - [Example Lambda Function Bundle](#example-lambda-function-package)
 - [Summon Usage](#summon-usage)
 
-**Status**: Community
 
-The conjur-iam-api-key module is available with a Community Certification Level.
+---
 
-Naming and API's are still subject to *breaking* changes.
+### **Status**: Community
+#### The conjur-iam-api-key module is available with a Community Certification Level.
+#### **Warning: Naming and APIs are still subject to breaking changes!**
+
+---
 
 
 ## Supported python versions
