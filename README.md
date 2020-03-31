@@ -9,7 +9,7 @@ Get an iam api key used by conjur or get a sdk client using iam authentication.
 
 **Status**: Community
 
-The [Project Name] is available with a Community Certification Level.
+The conjur-iam-api-key module is available with a Community Certification Level.
 
 Naming and API's are still subject to *breaking* changes.
 
@@ -144,3 +144,8 @@ summon -p ./iam_provider.py env
 # using 'iam_provider.py' standalone
 ./iam_provider.py path/to/secret/goes/here
 ```
+## Contributing
+
+We store instructions for development and guidelines for how to build and test this
+project in the [CONTRIBUTING.md](CONTRIBUTING.md) - please refer to that document
+if you would like to contribute.
