@@ -1,11 +1,18 @@
 # conjur-iam-api-key
-Get an iam api key used by conjur, get a sdk client using iam authentication.
+Get an iam api key used by conjur or get a sdk client using iam authentication.
 - [How to Install](#from-source)
 - [Available python3 functions](#usage)
 - [EC2 usage](#ec2-usage)
 - [Lambda Usage](#lambda-usage)
 - [Example Lambda Function Bundle](#example-lambda-function-package)
 - [Summon Usage](#summon-usage)
+
+**Status**: Community
+
+The [Project Name] is available with a Community Certification Level.
+
+Naming and API's are still subject to *breaking* changes.
+
 
 ## Supported python versions
 python >= 3.6
