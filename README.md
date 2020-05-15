@@ -135,7 +135,7 @@ def lambda_handler(event, context):
 
 #### 
 #### Example lambda function package
-An example of a bundled lambda function can be found [here](https://github.com/AndrewCopeland/conjur-iam-api-key/blob/master/lambda_function_package.zip). **If you are using a self signed certificate make sure to replace conjur-conjur.pem with your self signed cert!**
+An example of a bundled lambda function can be found [here](https://github.com/AndrewCopeland/conjur-iam-api-key/releases). **If you are using a self signed certificate make sure to replace conjur-conjur.pem with your self signed cert!**
 
 ## Summon Usage
 Summon usage has only been manually tested on an EC2 instance. With that being said make sure to set the [environment variables mentioned here](#ec2-usage). `iam_provider.py` is the summon provider. The `iam_provider.py` assumes python3 is installed on the EC2 instance. Example below:
